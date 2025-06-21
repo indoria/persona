@@ -4,8 +4,8 @@
 ####################################
 # 1. Install Prerequisites
 ####################################
-sudo apt update && sudo apt upgrade
-sudo apt install nginx
+sudo apt update && sudo apt upgrade -y
+sudo apt install nginx -y
 curl -fsSL https://code-server.dev/install.sh | sh
 
 
