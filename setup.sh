@@ -6,6 +6,7 @@
 ####################################
 sudo apt update && sudo apt upgrade -y
 sudo apt install nginx -y
+apt install python3.10-venv
 curl -fsSL https://code-server.dev/install.sh | sh
 
 
@@ -160,3 +161,9 @@ done
 nginx -t && systemctl reload nginx
 
 echo "✅ All apps deployed and reverse proxies configured."
+
+
+# VS Code plugins
+# Gitlens
+# SQLite Viewer
+
