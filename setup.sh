@@ -30,6 +30,12 @@ Environment=PASSWORD=PersonaNet123
 WantedBy=multi-user.target
 EOF
 
+# sudo systemctl enable --now code-server@$USER
+# Creates a symlink => Created symlink /etc/systemd/system/default.target.wants/code-server@azureuser.service → /lib/systemd/system/code-server@.service.
+# User is set to User=%i in this file
+# sudo systemctl status code-server@$USER
+# from "systemctl status" => Using password from /home/azureuser/.config/code-server/config.yaml
+# Bind address is also found in "home/azureuser/.config/code-server/config.yaml", change it to 0.0.0.0:8080 to access it from internet
 
 
 
