@@ -1,5 +1,93 @@
 #!/bin/bash
 
+
+####################################
+# 1. Install Prerequisites
+####################################
+sudo apt update && sudo apt upgrade
+sudo apt install nginx
+curl -fsSL https://code-server.dev/install.sh | sh
+
+
+####################################
+# 2. Setup Code Server
+####################################
+# ExecStart=/usr/bin/code-server --bind-addr 0.0.0.0:8080 --auth password --disable-telemetry --password your_password
+cat > "/etc/systemd/system/code-server.service" <<EOF
+[Unit]
+Description=code-server
+After=network.target
+
+[Service]
+Type=simple
+User=azureuser
+ExecStart=/usr/bin/code-server --bind-addr 0.0.0.0:8080
+Restart=always
+RestartSec=10
+Environment=PASSWORD=PersonaNet123
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+
+
+
+####################################
+# 3. Clone Repos
+####################################
+repos=(
+    "https://github.com/indoria/persona.git",
+    "https://github.com/indoria/persona-rag.git",
+    "https://github.com/indoria/persona-net.git",
+    "https://github.com/indoria/persona-forge.git",
+    "https://github.com/indoria/persona-emulator.git",
+    "https://github.com/indoria/persona-press.git",
+    "https://github.com/indoria/persona-journalist.git",
+)
+
+CLONE_DIR="/home/azureuser"
+
+cloneRepos() {
+  echo "Starting Git repository cloning process..."
+  echo "---------------------------------------"
+
+  if [ ${#repos[@]} -eq 0 ]; then
+    echo "Error: No repository URLs provided in the 'repos' array."
+    echo "Please edit the script and add your repository URLs."
+    exit 1
+  fi
+
+  if [ -n "${CLONE_DIR}" ]; then
+    echo "Cloning repositories into: ${CLONE_DIR}"
+    mkdir -p "${CLONE_DIR}"
+    cd "${CLONE_DIR}" || { echo "Error: Could not change to directory ${CLONE_DIR}. Exiting."; exit 1; }
+  else
+    echo "Cloning repositories into the current directory ($(pwd))."
+  fi
+
+  for repo_url in "${repos[@]}"; do
+    echo ""
+    echo "Cloning: ${repo_url}"
+    git clone "${repo_url}" || { echo "Warning: Failed to clone ${repo_url}. Continuing with next."; true; }
+    echo "---------------------------------------"
+  done
+
+  echo ""
+  echo "Git repository cloning process completed."
+  echo "Check the output above for any warnings or errors."
+}
+
+cloneRepos
+
+
+
+
+
+####################################
+# 3. Set up Reverse Proxy and Daemon service
+####################################
+
 BASE_DIR="/home/azureuser"
 SYSTEMD_DIR="/etc/systemd/system"
 NGINX_AVAILABLE="/etc/nginx/sites-available"
