@@ -18,7 +18,7 @@ Contains POC, NLP using spaCy en_core_web_sm
 https://spacy.io/models
 ```
 
-[Persona RAG](https://github.com/indoria/persona_rag)
+[Persona RAG](https://github.com/indoria/persona-rag)
 ```
 Contains implementation of RAG. Journalists chosen are "Barkha Dutt" and "Christopher Hitchens"
 ```
